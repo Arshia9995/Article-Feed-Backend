@@ -19,7 +19,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction): void =
 
     const decoded = jwt.verify(token, ACCESS_SECRET) as JwtPayload;
 
-    // 👇 Simple type assertion to avoid TypeScript error
+    
     (req as any).user = { _id: decoded.userId, email: decoded.email };
 
     next();

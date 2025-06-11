@@ -48,7 +48,7 @@ const ArticleSchema: Schema = new Schema({
   timestamps: true
 });
 
-// Index for better query performance
+
 ArticleSchema.index({ category: 1, createdAt: -1 });
 ArticleSchema.index({ author: 1, createdAt: -1 });
 ArticleSchema.index({ tags: 1 });

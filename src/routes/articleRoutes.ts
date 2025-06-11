@@ -1,12 +1,12 @@
 import express from 'express';
-import {   blockArticle, createArticle, deleteArticle, dislikeArticle, getArticleById,  getArticlesByCategories,  getUserArticles, likeArticle,  unblockArticle,  updateArticle } from '../controllers/articleController';
+import {   blockArticle, createArticle, deleteArticle, dislikeArticle, getArticleById,  getArticlesByCategories,  getLatestArticles,  getUserArticles, likeArticle,  removedislikeArticle,  removelikeArticle,  unblockArticle,  updateArticle } from '../controllers/articleController';
 import upload from '../middleware/upload';
 import authMiddleware from '../middleware/authMiddleware';
 import multer from 'multer';
 
 const articleRoutes = express.Router();
 
-// Error handling middleware for multer
+
 const handleMulterError = (error: any, req: any, res: any, next: any) => {
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {
@@ -30,11 +30,11 @@ const handleMulterError = (error: any, req: any, res: any, next: any) => {
     });
   }
 
-  // Pass other errors to the next error handler
+  
   next(error);
 };
 
-// Create article route with proper error handling
+
 articleRoutes.post('/create', 
   authMiddleware, 
   (req, res, next) => {
@@ -62,10 +62,13 @@ articleRoutes.put('/articles/:articleId',  (req, res, next) => {
 articleRoutes.get('/getarticles-by-preferences', authMiddleware, getArticlesByCategories);
 
 articleRoutes.post('/articles/like/:articleId',authMiddleware, likeArticle);
+articleRoutes.post('/articles/removelike/:articleId',authMiddleware, removelikeArticle);
+articleRoutes.post('/articles/removeDislike/:articleId',authMiddleware, removedislikeArticle);
 articleRoutes.post('/articles/dislike/:articleId', authMiddleware, dislikeArticle);
 // articleRoutes.post('/articles/block/:articleId', authMiddleware, blockArticle);
 
 articleRoutes.post('/articles/block/:articleId', authMiddleware, blockArticle);
 articleRoutes.post('/articles/unblock/:articleId', authMiddleware, unblockArticle);
+articleRoutes.get('/latest',  getLatestArticles);
 
 export default articleRoutes;

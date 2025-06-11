@@ -23,7 +23,7 @@ const OTPSchema: Schema = new Schema({
   },
 }, { timestamps: true });
 
-// Add TTL index
+
 OTPSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 export default mongoose.model<IOTP>('OTP', OTPSchema);
