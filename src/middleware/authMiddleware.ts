@@ -11,6 +11,7 @@ interface JwtPayload {
 const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   try {
     const token = req.cookies.accessToken;
+    console.log(token, " token here")
 
     if (!token) {
       res.status(401).json({ message: 'Access token missing. Unauthorized' });
