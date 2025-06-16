@@ -112,7 +112,7 @@ export const verifyOTP = async (req: Request, res: Response): Promise<void> => {
 
     
     const userData = {
-      _id: user._id,
+      id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
       phone: user.phone,

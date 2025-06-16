@@ -10,6 +10,7 @@ export interface IArticle extends Document {
   likes: mongoose.Types.ObjectId[];
   dislikes: mongoose.Types.ObjectId[];
   blocks: mongoose.Types.ObjectId[];
+  published: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -43,7 +43,11 @@ const ArticleSchema: Schema = new Schema({
   blocks: [{
     type: Schema.Types.ObjectId,
     ref: 'User'
-  }]
+  }],
+  published: { // New field
+    type: Boolean,
+    default: false
+  }
 }, {
   timestamps: true
 });
