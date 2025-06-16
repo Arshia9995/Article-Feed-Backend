@@ -1,5 +1,5 @@
 import express from 'express';
-import {   blockArticle, createArticle, deleteArticle, dislikeArticle, getArticleById,  getArticlesByCategories,  getLatestArticles,  getUserArticles, likeArticle,  removedislikeArticle,  removelikeArticle,  unblockArticle,  updateArticle } from '../controllers/articleController';
+import {   blockArticle, createArticle, deleteArticle, dislikeArticle, getArticleById,  getArticlesByCategories,  getLatestArticles,  getUserArticles, likeArticle,  publishArticle,  removedislikeArticle,  removelikeArticle,  unblockArticle,  updateArticle } from '../controllers/articleController';
 import upload from '../middleware/upload';
 import authMiddleware from '../middleware/authMiddleware';
 import multer from 'multer';
@@ -47,6 +47,7 @@ articleRoutes.post('/create',
   },
   createArticle
 );
+articleRoutes.patch('/publish/:id', authMiddleware, publishArticle);
 
 articleRoutes.get('/getuserarticles', authMiddleware, getUserArticles)
 articleRoutes.get('/articles/:articleId', authMiddleware, getArticleById);

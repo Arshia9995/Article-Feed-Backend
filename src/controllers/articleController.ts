@@ -179,6 +179,49 @@ export const createArticle = async (req: Request, res: Response): Promise<void> 
   }
 };
 
+export const publishArticle = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const articleId = req.params.id;
+    const userId = (req as any).user._id; // Assuming auth middleware adds user to req
+
+    // Find the article
+    const article = await Article.findById(articleId);
+    if (!article) {
+      res.status(404).json({ success: false, message: 'Article not found' });
+      return;
+    }
+
+    // Check if the user is the author
+    if (article.author.toString() !== userId.toString()) {
+      res.status(403).json({ success: false, message: 'Not authorized to publish this article' });
+      return;
+    }
+
+    // Prevent re-publishing
+    if (article.published) {
+      res.status(400).json({ success: false, message: 'Article is already published' });
+      return;
+    }
+
+    // Update published status
+    article.published = true;
+    await article.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Article published successfully',
+      article,
+    });
+  } catch (error: any) {
+    console.error('Error publishing article:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to publish article',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error',
+    });
+  }
+};
+
 
 export const getUserArticles = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -186,14 +229,13 @@ export const getUserArticles = async (req: Request, res: Response): Promise<void
 
     const articles = await Article.find({ author: userId })
       .populate('author', 'firstName email')
-      .sort({ createdAt: -1 }) 
+      .sort({ createdAt: -1 })
       .lean();
 
-   
     const articlesWithCounts = articles.map(article => ({
       ...article,
-      likes: article.likes ? article.likes.length : 0, 
-      dislikes: article.dislikes ? article.dislikes.length : 0, 
+      likes: article.likes ? article.likes.length : 0,
+      dislikes: article.dislikes ? article.dislikes.length : 0,
     }));
 
     res.status(200).json({
@@ -436,13 +478,13 @@ export const getArticlesByCategories = async (req: Request, res: Response): Prom
   try {
     const { categories } = req.query;
 
-    
+    // Validate categories parameter
     if (!categories) {
       res.status(400).json({ success: false, message: 'Categories parameter is required' });
       return;
     }
 
-    
+    // Parse categories into an array
     const categoryArray = typeof categories === 'string' ? categories.split(',').map(cat => cat.trim().toLowerCase()) : [];
 
     if (categoryArray.length === 0) {
@@ -450,10 +492,13 @@ export const getArticlesByCategories = async (req: Request, res: Response): Prom
       return;
     }
 
-    
-    const articles = await Article.find({ category: { $in: categoryArray } })
+    // Fetch only published articles
+    const articles = await Article.find({ 
+      category: { $in: categoryArray },
+      published: true // Added filter for published articles
+    })
       .populate('author', 'firstName email')
-      .sort({ createdAt: -1 }) 
+      .sort({ createdAt: -1 })
       .lean();
 
     res.status(200).json({
@@ -502,6 +547,8 @@ export const likeArticle = async (req: Request, res: Response): Promise<void> =>
 
     await article.save();
 
+
+    
     
     const populatedArticle = await Article.findById(articleId)
       .populate('author', 'firstName email')

@@ -82,13 +82,13 @@ const verifyOTP = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'none',
             maxAge: 15 * 60 * 1000,
         });
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
         const userData = {
@@ -134,13 +134,13 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.cookie('accessToken', accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'none',
         maxAge: 15 * 60 * 1000,
     });
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'none',
         maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     res.status(200).json({
@@ -237,12 +237,12 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.clearCookie('accessToken', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'none',
         });
         res.clearCookie('refreshToken', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'none',
         });
         res.status(200).json({
             message: 'Logout successful',
