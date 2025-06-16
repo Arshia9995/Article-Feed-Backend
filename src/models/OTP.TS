@@ -27,3 +27,6 @@ const OTPSchema: Schema = new Schema({
 OTPSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 export default mongoose.model<IOTP>('OTP', OTPSchema);
+
+
+
